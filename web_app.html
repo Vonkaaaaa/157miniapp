@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Викторина ко Дню компьютера</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #8B3A3A 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 30px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .start-screen {
+            text-align: center;
+        }
+
+        .start-screen .emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .start-screen p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .quiz-screen {
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .question-number {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .question {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .option:hover:not(:disabled) {
+            border-color: #667eea;
+            background: #f5f7ff;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .option.correct {
+            border-color: #4caf50;
+            background: #4caf50;
+            color: white;
+        }
+
+        .option.incorrect {
+            border-color: #f44336;
+            background: #f44336;
+            color: white;
+        }
+
+        .option:disabled {
+            cursor: not-allowed;
+        }
+
+        .results-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .results-message {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .results-description {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .detailed-results {
+            text-align: left;
+            background: #f5f5f5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .result-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-item-question {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .result-item-answer {
+            color: #666;
+            margin-bottom: 3px;
+        }
+
+        .result-item-answer.correct {
+            color: #4caf50;
+        }
+
+        .result-item-answer.incorrect {
+            color: #f44336;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #A0522D, #8B3A3A);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(160, 82, 45, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .feedback {
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .feedback.incorrect {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .question {
+                font-size: 16px;
+            }
+
+            .option {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 Викторина</h1>
+            <p>Ко Дню компьютера</p>
+        </div>
+
+        <!-- Start Screen -->
+        <div class="start-screen" id="startScreen">
+            <div class="emoji">💻</div>
+            <p>Добро пожаловать в викторину ко Дню компьютера!</p>
+            <p>Проверь свои знания в области информатики и технологий.</p>
+            <p style="font-size: 12px; color: #999; margin-top: 20px;">5 вопросов • 2-3 минуты</p>
+            <div class="buttons">
+                <button class="btn-primary" onclick="startQuiz()">Начать викторину</button>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div class="quiz-screen" id="quizScreen">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="question-number" id="questionNumber"></div>
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+            <div class="feedback" id="feedback"></div>
+            <div class="buttons">
+                <button class="btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>Следующий вопрос</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div class="results-screen" id="resultsScreen">
+            <div class="score-circle" id="scoreCircle"></div>
+            <div class="results-message" id="resultsMessage"></div>
+            <div class="results-description" id="resultsDescription"></div>
+            <div class="detailed-results" id="detailedResults"></div>
+            <div class="buttons">
+                <button class="btn-primary" onclick="startQuiz()">Пройти снова</button>
+                <button class="btn-secondary" onclick="shareResults()">Поделиться</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Telegram Web App
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
+        // Quiz data
+        const QUESTIONS = [
+            {
+                question: 'Кто считается отцом-основателем компании Microsoft?',
+                options: ['Билл Гейтс', 'Стив Джобс', 'Марк Цукерберг', 'Илон Маск'],
+                correct: 0
+            },
+            {
+                question: 'Какой язык программирования считается самым популярным в 2023 году?',
+                options: ['Python', 'JavaScript', 'Java', 'C++'],
+                correct: 0
+            },
+            {
+                question: 'Что из перечисленного является операционной системой?',
+                options: ['Windows', 'MS Word', 'Google Chrome', 'Photoshop'],
+                correct: 0
+            },
+            {
+                question: 'Как называется первая в мире компьютерная программа?',
+                options: ['Алгоритм для аналитической машины', 'Windows 1.0', 'UNIX', 'MS-DOS'],
+                correct: 0
+            },
+            {
+                question: 'Какой компании принадлежит операционная система Android?',
+                options: ['Google', 'Apple', 'Microsoft', 'Samsung'],
+                correct: 0
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answers = [];
+        let selectedAnswer = null;
+
+        function startQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            answers = [];
+            selectedAnswer = null;
+            showQuizScreen();
+            displayQuestion();
+        }
+
+        function showStartScreen() {
+            document.getElementById('startScreen').style.display = 'block';
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('resultsScreen').style.display = 'none';
+        }
+
+        function showQuizScreen() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('quizScreen').style.display = 'block';
+            document.getElementById('resultsScreen').style.display = 'none';
+        }
+
+        function showResultsScreen() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('resultsScreen').style.display = 'block';
+        }
+
+        function displayQuestion() {
+            const question = QUESTIONS[currentQuestion];
+            const progress = ((currentQuestion + 1) / QUESTIONS.length) * 100;
+
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('questionNumber').textContent = `Вопрос ${currentQuestion + 1} из ${QUESTIONS.length}`;
+            document.getElementById('question').textContent = question.question;
+
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option';
+                button.textContent = option;
+                button.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(button);
+            });
+
+            selectedAnswer = null;
+            document.getElementById('nextBtn').disabled = true;
+            document.getElementById('feedback').classList.remove('show', 'correct', 'incorrect');
+        }
+
+        function selectAnswer(index) {
+            const question = QUESTIONS[currentQuestion];
+            const isCorrect = index === question.correct;
+            const options = document.querySelectorAll('.option');
+
+            // Disable all options
+            options.forEach(opt => opt.disabled = true);
+
+            // Show selected answer
+            options[index].classList.add('selected');
+
+            // Show correct/incorrect feedback
+            if (isCorrect) {
+                options[index].classList.remove('selected');
+                options[index].classList.add('correct');
+                score++;
+                showFeedback('✅ Правильно!', 'correct');
+            } else {
+                options[index].classList.remove('selected');
+                options[index].classList.add('incorrect');
+                options[question.correct].classList.add('correct');
+                showFeedback(`❌ Неверно! Правильный ответ: ${question.options[question.correct]}`, 'incorrect');
+            }
+
+            answers.push({
+                question: question.question,
+                selected: index,
+                correct: question.correct,
+                isCorrect: isCorrect
+            });
+
+            selectedAnswer = index;
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function showFeedback(message, type) {
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = message;
+            feedback.classList.add('show', type);
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < QUESTIONS.length) {
+                displayQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            showResultsScreen();
+            const percentage = (score / QUESTIONS.length) * 100;
+
+            let emoji, message, description;
+            if (percentage >= 80) {
+                emoji = '🎉';
+                message = 'Отличный результат!';
+                description = 'Ты настоящий компьютерный гений!';
+            } else if (percentage >= 50) {
+                emoji = '👍';
+                message = 'Хороший результат!';
+                description = 'Но есть куда стремиться!';
+            } else {
+                emoji = '🤔';
+                message = 'Неплохо!';
+                description = 'Тебе стоит подтянуть знания в области информатики!';
+            }
+
+            document.getElementById('scoreCircle').textContent = `${score}/${QUESTIONS.length}`;
+            document.getElementById('resultsMessage').textContent = message;
+            document.getElementById('resultsDescription').textContent = description;
+
+            // Show detailed results
+            const detailedResults = document.getElementById('detailedResults');
+            detailedResults.innerHTML = '';
+            answers.forEach((answer, index) => {
+                const item = document.createElement('div');
+                item.className = 'result-item';
+                item.innerHTML = `
+                    <div class="result-item-question">${index + 1}. ${answer.question}</div>
+                    <div class="result-item-answer ${answer.isCorrect ? 'correct' : 'incorrect'}">
+                        ${answer.isCorrect ? '✅' : '❌'} ${QUESTIONS[index].options[answer.selected]}
+                    </div>
+                    ${!answer.isCorrect ? `<div class="result-item-answer">Правильный ответ: ${QUESTIONS[index].options[answer.correct]}</div>` : ''}
+                `;
+                detailedResults.appendChild(item);
+            });
+        }
+
+        function shareResults() {
+            const percentage = (score / QUESTIONS.length) * 100;
+            const message = `🎮 Я набрал ${score} из ${QUESTIONS.length} (${Math.round(percentage)}%) в викторине ко Дню компьютера! Попробуй и ты! 💻`;
+            
+            if (tg.sendData) {
+                tg.sendData(message);
+            } else {
+                alert(message);
+            }
+        }
+
+        // Show start screen on load
+        showStartScreen();
+    </script>
+</body>
+</html>
