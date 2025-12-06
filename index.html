@@ -1213,6 +1213,30 @@
                 `;
                 detailedResults.appendChild(item);
             });
+
+            // Save result to server
+            saveResultToServer();
+        }
+
+        function saveResultToServer() {
+            const user = tg.initDataUnsafe?.user;
+            const resultData = {
+                user_id: user?.id || 0,
+                username: user?.username || user?.first_name || 'Anonymous',
+                score: score,
+                total_questions: QUESTIONS.length
+            };
+
+            fetch('http://localhost:5000/api/save-result', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(resultData)
+            })
+            .then(response => response.json())
+            .then(data => console.log('Результат збережено:', data))
+            .catch(error => console.error('Помилка при збереженні:', error));
         }
 
         function shareResults() {
