@@ -1031,10 +1031,35 @@
         let selectedAnswer = null;
 
         function startQuiz() {
+            // Get user ID from Telegram
+            const user = tg.initDataUnsafe?.user;
+            const userId = user?.id;
+            const username = user?.username || user?.first_name || 'Anonymous';
+            
+            // Log to console
+            console.log('=== КОРИСТУВАЧ ПОЧАВ ВІКТОРИНУ ===');
+            console.log('User ID:', userId);
+            console.log('Username:', username);
+            console.log('Час:', new Date().toLocaleString('uk-UA'));
+            console.log('=====================================');
+            
+            // Show class input form
+            const classInput = prompt('Введи свій клас (наприклад: 9-А, 10-Б):');
+            if (!classInput) {
+                alert('Будь ласка, введи клас!');
+                return;
+            }
+            
             currentQuestion = 0;
             score = 0;
             answers = [];
             selectedAnswer = null;
+            
+            // Store user info
+            window.userClass = classInput;
+            window.userId = userId;
+            window.username = username;
+            
             showQuizScreen();
             displayQuestion();
         }
@@ -1219,13 +1244,22 @@
         }
 
         function saveResultToServer() {
-            const user = tg.initDataUnsafe?.user;
             const resultData = {
-                user_id: user?.id || 0,
-                username: user?.username || user?.first_name || 'Anonymous',
+                user_id: window.userId || 0,
+                username: window.username || 'Anonymous',
+                class: window.userClass || 'Unknown',
                 score: score,
                 total_questions: QUESTIONS.length
             };
+
+            // Log result to console
+            console.log('=== РЕЗУЛЬТАТ ВІКТОРИНИ ===');
+            console.log('User ID:', resultData.user_id);
+            console.log('Username:', resultData.username);
+            console.log('Клас:', resultData.class);
+            console.log('Результат:', `${resultData.score}/${resultData.total_questions}`);
+            console.log('Час завершення:', new Date().toLocaleString('uk-UA'));
+            console.log('============================');
 
             fetch('http://localhost:5000/api/save-result', {
                 method: 'POST',
@@ -1235,7 +1269,7 @@
                 body: JSON.stringify(resultData)
             })
             .then(response => response.json())
-            .then(data => console.log('Результат збережено:', data))
+            .then(data => console.log('Результат збережено на сервері:', data))
             .catch(error => console.error('Помилка при збереженні:', error));
         }
 
