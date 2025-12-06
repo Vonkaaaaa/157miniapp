@@ -1036,19 +1036,26 @@
             const userId = user?.id;
             const username = user?.username || user?.first_name || 'Anonymous';
             
-            // Log to console
-            console.log('=== КОРИСТУВАЧ ПОЧАВ ВІКТОРИНУ ===');
-            console.log('User ID:', userId);
-            console.log('Username:', username);
-            console.log('Час:', new Date().toLocaleString('uk-UA'));
-            console.log('=====================================');
-            
             // Show class input form
             const classInput = prompt('Введи свій клас (наприклад: 9-А, 10-Б):');
             if (!classInput) {
                 alert('Будь ласка, введи клас!');
                 return;
             }
+            
+            // Send user info to server
+            fetch('http://localhost:5000/api/user-started', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                    username: username,
+                    class: classInput
+                })
+            })
+            .catch(error => console.error('Помилка при відправці:', error));
             
             currentQuestion = 0;
             score = 0;
