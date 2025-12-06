@@ -1,1298 +1,454 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Вікторина до Дня комп'ютера</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #d32f2f 0%, #c62828 25%, #8b0000 50%, #a0522d 75%, #8b4513 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(255, 87, 34, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(230, 124, 115, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 50% 20%, rgba(229, 57, 53, 0.1) 0%, transparent 40%);
-            pointer-events: none;
-            z-index: 0;
-            animation: float 20s ease-in-out infinite;
-        }
-
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(circle at 15% 30%, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                radial-gradient(circle at 85% 70%, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 200px 200px, 300px 300px, 250px 250px;
-            pointer-events: none;
-            z-index: 0;
-            animation: float 30s ease-in-out infinite reverse;
-        }
-    </style>
-    <style>
-        /* Декоративные элементы на фоне */
-        @keyframes wave {
-            0%, 100% {
-                transform: translateY(0px) translateX(0px);
-            }
-            50% {
-                transform: translateY(-20px) translateX(10px);
-            }
-        }
-
-        @keyframes slideDown {
-            0% {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            50% {
-                opacity: 0.3;
-            }
-            100% {
-                transform: translateY(100vh);
-                opacity: 0;
-            }
-        }
-
-        @keyframes rotateSlow {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        .bg-decoration {
-            position: fixed;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .bg-circle {
-            position: fixed;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .circle-1 {
-            width: 300px;
-            height: 300px;
-            top: -100px;
-            right: -100px;
-            background: radial-gradient(circle, rgba(255, 152, 0, 0.4) 0%, rgba(255, 87, 34, 0.2) 40%, transparent 70%);
-            animation: float 15s ease-in-out infinite;
-            filter: blur(40px);
-        }
-
-        .circle-2 {
-            width: 200px;
-            height: 200px;
-            bottom: -50px;
-            left: -50px;
-            background: radial-gradient(circle, rgba(244, 67, 54, 0.35) 0%, rgba(229, 57, 53, 0.2) 40%, transparent 70%);
-            animation: float 20s ease-in-out infinite reverse;
-            filter: blur(35px);
-        }
-
-        .circle-3 {
-            width: 150px;
-            height: 150px;
-            top: 50%;
-            right: 10%;
-            background: radial-gradient(circle, rgba(255, 193, 7, 0.3) 0%, rgba(244, 67, 54, 0.15) 40%, transparent 70%);
-            animation: float 18s ease-in-out infinite;
-            filter: blur(30px);
-        }
-
-        .wave-line {
-            position: fixed;
-            width: 200%;
-            height: 100px;
-            bottom: 0;
-            left: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M0,50 Q300,0 600,50 T1200,50 L1200,120 L0,120 Z" fill="rgba(255, 152, 0, 0.25)"/></svg>');
-            background-size: 600px 120px;
-            animation: wave 10s linear infinite;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .wave-line-2 {
-            position: fixed;
-            width: 200%;
-            height: 80px;
-            bottom: 20px;
-            left: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M0,60 Q300,20 600,60 T1200,60 L1200,120 L0,120 Z" fill="rgba(244, 67, 54, 0.2)"/></svg>');
-            background-size: 600px 120px;
-            animation: wave 15s linear infinite reverse;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .geometric-shape {
-            position: fixed;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.5;
-        }
-
-        .shape-1 {
-            width: 100px;
-            height: 100px;
-            top: 20%;
-            left: 10%;
-            background: linear-gradient(45deg, transparent 48%, rgba(255, 193, 7, 0.5) 49%, rgba(255, 193, 7, 0.5) 51%, transparent 52%);
-            animation: rotateSlow 20s linear infinite;
-        }
-
-        .shape-2 {
-            width: 80px;
-            height: 80px;
-            bottom: 20%;
-            right: 15%;
-            border: 3px solid rgba(255, 152, 0, 0.4);
-            border-radius: 20px;
-            animation: rotateSlow 25s linear infinite reverse;
-        }
-
-        .shape-3 {
-            width: 60px;
-            height: 60px;
-            top: 60%;
-            left: 5%;
-            background: linear-gradient(135deg, rgba(244, 67, 54, 0.5) 0%, transparent 50%);
-            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
-            animation: float 12s ease-in-out infinite;
-        }
-
-        .shape-4 {
-            width: 70px;
-            height: 70px;
-            top: 30%;
-            right: 5%;
-            border: 3px solid rgba(255, 193, 7, 0.5);
-            border-radius: 50%;
-            animation: rotateSlow 15s linear infinite;
-        }
-
-        .shape-5 {
-            width: 90px;
-            height: 90px;
-            bottom: 30%;
-            right: 5%;
-            background: linear-gradient(135deg, rgba(255, 152, 0, 0.3) 0%, transparent 50%);
-            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-            animation: float 14s ease-in-out infinite;
-        }
-
-        .shape-6 {
-            width: 50px;
-            height: 50px;
-            top: 40%;
-            left: 50%;
-            background: linear-gradient(45deg, rgba(244, 67, 54, 0.4) 0%, transparent 50%);
-            animation: rotateSlow 18s linear infinite reverse;
-        }
-
-        .shape-7 {
-            width: 80px;
-            height: 80px;
-            bottom: 10%;
-            left: 20%;
-            border: 2px solid rgba(255, 193, 7, 0.4);
-            border-radius: 10px;
-            animation: float 16s ease-in-out infinite;
-        }
-
-        .shape-8 {
-            width: 65px;
-            height: 65px;
-            top: 15%;
-            left: 40%;
-            background: linear-gradient(135deg, rgba(255, 152, 0, 0.4) 0%, transparent 50%);
-            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
-            animation: float 13s ease-in-out infinite reverse;
-        }
-
-        .shape-9 {
-            width: 55px;
-            height: 55px;
-            bottom: 40%;
-            right: 25%;
-            border: 2px dashed rgba(244, 67, 54, 0.5);
-            border-radius: 50%;
-            animation: rotateSlow 22s linear infinite;
-        }
-
-        .shape-10 {
-            width: 75px;
-            height: 75px;
-            top: 70%;
-            right: 30%;
-            background: linear-gradient(45deg, rgba(255, 193, 7, 0.3) 0%, transparent 50%);
-            animation: float 17s ease-in-out infinite;
-        }
-    </style>
-    <style>
-
-        body > * {
-            position: relative;
-            z-index: 1;
-        }
-
-        .container {
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2), 0 0 100px rgba(211, 47, 47, 0.1);
-            max-width: 550px;
-            width: 100%;
-            padding: 40px;
-            animation: slideIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(10px);
-            max-height: 90vh;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .container::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .container::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-
-        .container::-webkit-scrollbar-thumb {
-            background: #d32f2f;
-            border-radius: 10px;
-        }
-
-        .container::-webkit-scrollbar-thumb:hover {
-            background: #a0522d;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        @keyframes glow {
-            0%, 100% {
-                box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
-            }
-            50% {
-                box-shadow: 0 0 40px rgba(102, 126, 234, 0.8);
-            }
-        }
-
-        @keyframes shimmer {
-            0% {
-                background-position: -1000px 0;
-            }
-            100% {
-                background-position: 1000px 0;
-            }
-        }
-
-        @keyframes progressSlide {
-            0% {
-                width: 0;
-                opacity: 0;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                width: 100%;
-                opacity: 1;
-            }
-        }
-
-        @keyframes progressPulse {
-            0% {
-                box-shadow: 0 0 15px rgba(211, 47, 47, 0.4);
-            }
-            50% {
-                box-shadow: 0 0 30px rgba(211, 47, 47, 0.8), inset 0 0 10px rgba(255, 255, 255, 0.4);
-            }
-            100% {
-                box-shadow: 0 0 15px rgba(211, 47, 47, 0.4);
-            }
-        }
-
-
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-8px);
-            }
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 35px;
-            background: linear-gradient(135deg, #d32f2f 0%, #c62828 50%, #a0522d 100%);
-            padding: 25px;
-            border-radius: 16px;
-            color: white;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(211, 47, 47, 0.4);
-            animation: none;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
-            animation: shimmer 3s infinite;
-        }
-
-        .header h1 {
-            font-size: 32px;
-            margin-bottom: 8px;
-            font-weight: 700;
-            position: relative;
-            z-index: 1;
-            font-family: 'Poppins', sans-serif;
-            letter-spacing: -0.5px;
-            animation: none !important;
-            transform: none !important;
-        }
-
-        .header p {
-            font-size: 14px;
-            opacity: 0.9;
-            font-weight: 500;
-            position: relative;
-            z-index: 1;
-        }
-
-        .start-screen {
-            text-align: center;
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        .start-screen .emoji {
-            font-size: 100px;
-            margin-bottom: 25px;
-            display: inline-block;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .start-screen p {
-            color: #555;
-            margin-bottom: 18px;
-            line-height: 1.7;
-            font-size: 16px;
-        }
-
-        .start-screen p:first-of-type {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .quiz-screen {
-            display: none;
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e8e8e8;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #d32f2f 0%, #a0522d 100%);
-            transition: width 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            border-radius: 10px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 0 15px rgba(211, 47, 47, 0.4);
-        }
-
-        .progress-fill.animate {
-            animation: progressPulse 0.8s ease-out;
-        }
-
-        .progress-fill::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        }
-
-        .question-number {
-            color: #999;
-            font-size: 13px;
-            margin-bottom: 18px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .question {
-            font-size: 20px;
-            font-weight: 700;
-            color: #222;
-            margin-bottom: 28px;
-            line-height: 1.6;
-            animation: fadeIn 0.5s ease-out;
-            background: linear-gradient(135deg, #d32f2f 0%, #a0522d 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-family: 'Poppins', sans-serif;
-            letter-spacing: -0.3px;
-        }
-
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            margin-bottom: 20px;
-        }
-
-        .option {
-            padding: 16px 18px;
-            border: 2px solid #e0e0e0;
-            border-radius: 14px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: white;
-            font-size: 16px;
-            color: #333;
-            font-weight: 500;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            font-family: 'Inter', sans-serif;
-            line-height: 1.6;
-            letter-spacing: 0.3px;
-        }
-
-        .option::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transition: left 0.6s;
-        }
-
-        .option::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(102, 126, 234, 0.1) 0%, transparent 80%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .option:hover:not(:disabled) {
-            border-color: #d32f2f;
-            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
-            transform: translateX(4px) translateY(-2px);
-            box-shadow: 0 12px 24px rgba(211, 47, 47, 0.2);
-        }
-
-        .option:hover:not(:disabled)::before {
-            left: 100%;
-        }
-
-        .option.selected {
-            border-color: #d32f2f;
-            background: linear-gradient(135deg, #d32f2f 0%, #a0522d 100%);
-            color: white;
-            box-shadow: 0 8px 20px rgba(211, 47, 47, 0.3);
-        }
-
-        .option.correct {
-            border-color: #10b981;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-            animation: slideIn 0.3s ease-out;
-        }
-
-        .option.incorrect {
-            border-color: #ef4444;
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            color: white;
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
-            animation: slideIn 0.3s ease-out;
-        }
-
-        .option:disabled {
-            cursor: not-allowed;
-        }
-
-        .results-screen {
-            display: none;
-            text-align: center;
-            animation: fadeIn 0.6s ease-out;
-        }
-
-        .score-circle {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #d32f2f 0%, #a0522d 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 30px;
-            color: white;
-            font-size: 56px;
-            font-weight: bold;
-            box-shadow: 0 15px 35px rgba(211, 47, 47, 0.3), 0 0 60px rgba(211, 47, 47, 0.2);
-            animation: pulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), glow 2s ease-in-out infinite;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .score-circle::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
-            animation: rotate 3s linear infinite;
-        }
-
-        .score-circle::after {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #d32f2f 0%, #a0522d 100%);
-            opacity: 0.5;
-            filter: blur(8px);
-            z-index: -1;
-            animation: pulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s;
-        }
-
-        .results-message {
-            font-size: 26px;
-            font-weight: 700;
-            color: #222;
-            margin-bottom: 12px;
-            font-family: 'Poppins', sans-serif;
-            letter-spacing: -0.5px;
-        }
-
-        .results-description {
-            color: #666;
-            margin-bottom: 30px;
-            line-height: 1.7;
-            font-size: 16px;
-        }
-
-        .detailed-results {
-            text-align: left;
-            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
-            border-radius: 14px;
-            padding: 24px;
-            margin-bottom: 25px;
-            max-height: 350px;
-            overflow-y: auto;
-            border: 1px solid #e0e7ff;
-        }
-
-        .detailed-results::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .detailed-results::-webkit-scrollbar-track {
-            background: #f0f0f0;
-            border-radius: 10px;
-        }
-
-        .detailed-results::-webkit-scrollbar-thumb {
-            background: #667eea;
-            border-radius: 10px;
-        }
-
-        .result-item {
-            padding: 16px 0;
-            border-bottom: 1px solid #e0e7ff;
-            font-size: 14px;
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        .result-item:last-child {
-            border-bottom: none;
-        }
-
-        .result-item-question {
-            font-weight: 700;
-            color: #222;
-            margin-bottom: 8px;
-        }
-
-        .result-item-answer {
-            color: #666;
-            margin-bottom: 4px;
-            padding-left: 20px;
-        }
-
-        .result-item-answer.correct {
-            color: #10b981;
-            font-weight: 600;
-        }
-
-        .result-item-answer.incorrect {
-            color: #ef4444;
-            font-weight: 600;
-        }
-
-        .buttons {
-            display: flex;
-            gap: 14px;
-            margin-top: 25px;
-        }
-
-        button {
-            flex: 1;
-            padding: 16px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            position: relative;
-            overflow: hidden;
-            font-family: 'Inter', sans-serif;
-        }
-
-        button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        button:active::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #d32f2f 0%, #a0522d 100%);
-            color: white;
-            box-shadow: 0 10px 25px rgba(211, 47, 47, 0.3);
-            position: relative;
-            z-index: 1;
-        }
-
-        .btn-primary::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.15) 50%, transparent 70%);
-            animation: shimmer 3s infinite;
-        }
-
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(211, 47, 47, 0.5);
-        }
-
-        .btn-primary:active:not(:disabled) {
-            transform: translateY(-1px);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-secondary {
-            background: #f0f0f0;
-            color: #333;
-            border: 2px solid #e0e0e0;
-            transition: all 0.3s ease;
-        }
-
-        .btn-secondary:hover {
-            background: #e8e8e8;
-            border-color: #d32f2f;
-            color: #d32f2f;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(211, 47, 47, 0.15);
-        }
-
-        .feedback {
-            padding: 14px 16px;
-            border-radius: 12px;
-            margin-top: 18px;
-            font-weight: 600;
-            display: none;
-            animation: slideIn 0.3s ease-out;
-            font-size: 15px;
-        }
-
-        .feedback.show {
-            display: block;
-        }
-
-        .feedback.correct {
-            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-            color: #065f46;
-            border-left: 4px solid #10b981;
-        }
-
-        .feedback.incorrect {
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-            color: #7f1d1d;
-            border-left: 4px solid #ef4444;
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 25px;
-                border-radius: 20px;
-            }
-
-            .header {
-                padding: 20px;
-                margin-bottom: 25px;
-            }
-
-            .header h1 {
-                font-size: 26px;
-            }
-
-            .question {
-                font-size: 18px;
-                margin-bottom: 22px;
-            }
-
-            .option {
-                padding: 14px 16px;
-                font-size: 15px;
-            }
-
-            .score-circle {
-                width: 120px;
-                height: 120px;
-                font-size: 48px;
-            }
-
-            button {
-                padding: 14px;
-                font-size: 14px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- Декоративные элементы фона -->
-    <div class="bg-circle circle-1"></div>
-    <div class="bg-circle circle-2"></div>
-    <div class="bg-circle circle-3"></div>
-    <div class="wave-line"></div>
-    <div class="wave-line-2"></div>
-    <div class="geometric-shape shape-1"></div>
-    <div class="geometric-shape shape-2"></div>
-    <div class="geometric-shape shape-3"></div>
-    <div class="geometric-shape shape-4"></div>
-    <div class="geometric-shape shape-5"></div>
-    <div class="geometric-shape shape-6"></div>
-    <div class="geometric-shape shape-7"></div>
-    <div class="geometric-shape shape-8"></div>
-    <div class="geometric-shape shape-9"></div>
-    <div class="geometric-shape shape-10"></div>
-
-    <div class="container">
-        <div class="header">
-            <h1>🎮 Вікторина</h1>
-            <p>До Дня комп'ютера</p>
-        </div>
-
-        <!-- Start Screen -->
-        <div class="start-screen" id="startScreen">
-            <div class="emoji">💻</div>
-            <p>Ласкаво просимо до вікторини до Дня комп'ютера!</p>
-            <p>Перевір свої знання в галузі інформатики та технологій.</p>
-            <p style="font-size: 12px; color: #999; margin-top: 20px;">10 запитань • 5-7 хвилин</p>
-            <div class="buttons">
-                <button class="btn-primary" onclick="startQuiz()">Почати вікторину</button>
-            </div>
-        </div>
-
-        <!-- Quiz Screen -->
-        <div class="quiz-screen" id="quizScreen">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-            <div class="question-number" id="questionNumber"></div>
-            <div class="question" id="question"></div>
-            <div class="options" id="options"></div>
-            <div class="feedback" id="feedback"></div>
-            <div class="buttons">
-                <button class="btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>Наступне запитання</button>
-            </div>
-        </div>
-
-        <!-- Results Screen -->
-        <div class="results-screen" id="resultsScreen">
-            <div class="score-circle" id="scoreCircle"></div>
-            <div class="results-message" id="resultsMessage"></div>
-            <div class="results-description" id="resultsDescription"></div>
-            <div class="detailed-results" id="detailedResults"></div>
-            <div class="buttons">
-                <button class="btn-primary" onclick="startQuiz()">Спробувати знову</button>
-                <button class="btn-secondary" onclick="shareResults()">Поділитися</button>
-            </div>
-        </div>
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ліцей №157 м. Харків — Головна</title>
+    <meta name="description" content="Офіційний сайт Харківського ліцею №157: новини, розклад, вчителі, вступ та контакти.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/img/log.jpg">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/log.jpg">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/log.jpg">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/log.jpg">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/log.jpg">
+    
+    <link rel="stylesheet" href="assets/css/styles.css">
+  </head>
+  <body>
+    <!-- Dark Mode Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Переключити тему">
+      <span class="theme-toggle-icon sun">☀️</span>
+      <span class="theme-toggle-icon moon">🌙</span>
+    </button>
+    
+    <div class="bg-decor" aria-hidden="true">
+      <span class="blob one"></span>
+      <span class="blob two"></span>
+      <span class="blob three"></span>
+      <span class="blob four"></span>
+      <span class="blob five"></span>
+      <span class="blob six"></span>
+      <span class="blob seven"></span>
+      <span class="blob eight"></span>
+      <span class="blob nine"></span>
+      <span class="blob ten"></span>
+      <span class="blob eleven"></span>
+      <span class="blob twelve"></span>
+      <span class="blob thirteen"></span>
+      <span class="blob fourteen"></span>
+      <span class="blob fifteen"></span>
+      <span class="blob sixteen"></span>
+      <span class="blob seventeen"></span>
+      <span class="blob eighteen"></span>
+      <span class="blob nineteen"></span>
+      <span class="blob twenty"></span>
     </div>
+    <header class="site-header" role="banner">
+      <div class="container nav">
+        <a class="brand" href="index.html">
+          <img class="brand-badge-img" src="assets/img/log.jpg" alt="Ліцей №157">
+          <span>Ліцей №157</span>
+        </a>
+        <nav aria-label="Основна навігація">
+          <button class="menu-toggle" aria-expanded="false" aria-controls="nav-links" data-menu-toggle aria-label="Відкрити меню">
+          </button>
+          <div id="nav-links" class="nav-links" data-nav-links>
+            <a href="index.html" aria-current="page">Головна</a>
+            <a href="about.html">Про ліцей</a>
+            <a href="news.html">Новини</a>
+            <a href="schedule.html">Розклад</a>
+            <a href="teachers.html">Вчителі</a>
+            <a href="admission.html">Вступ</a>
+            <a href="contacts.html">Контакти</a>
+            <a href="register.html" class="register-link">Реєстрація</a>
+            <a href="login.html" class="login-link">Вхід</a>
+            <a href="profile.html" class="profile-link">Особистий кабінет</a>
+          </div>
+        </nav>
+      </div>
+    </header>
 
+    <main>
+      <section class="hero">
+        <div class="container hero-inner">
+          <div class="reveal watermark">
+            <h1><span class="text-gradient">Ласкаво просимо</span> до ліцею №157</h1>
+            <p>Тут ви знайдете актуальні новини, розклад занять, інформацію про вчителів та правила вступу.</p>
+            
+            <div class="hero-quotes">
+              <blockquote class="hero-quote">
+                <p><em>"Освіта — це найпотужніша зброя, яку можна використати, щоб змінити світ"</em></p>
+                <cite>— Нельсон Мандела</cite>
+              </blockquote>
+              
+              <div class="hero-values">
+                <div class="value-item">
+                  <strong>🌟 Досконалість</strong>
+                  <span>у кожній деталі навчання</span>
+                </div>
+                <div class="value-item">
+                  <strong>🚀 Інновації</strong>
+                  <span>для майбутніх лідерів</span>
+                </div>
+                <div class="value-item">
+                  <strong>💡 Натхнення</strong>
+                  <span>до нових відкриттів</span>
+                </div>
+              </div>
+              
+              <p class="hero-motto">
+                <strong>Наша місія:</strong> Формуємо покоління, яке змінить світ на краще. 
+                Кожен учень — це майбутній лідер, винахідник, творець нового світу.
+              </p>
+            </div>
+            <div class="hero-actions">
+              <a class="cta" href="news.html">Переглянути новини</a>
+              <div class="social-links">
+                <a href="https://www.instagram.com/kharkiv_liceum157?igsh=MXgzM2ZzM205OTloaQ==" target="_blank" rel="noopener noreferrer" class="social-link instagram" aria-label="Instagram ліцею">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  </svg>
+                </a>
+                <a href="https://t.me/kha_luce157" target="_blank" rel="noopener noreferrer" class="social-link telegram" aria-label="Telegram канал ліцею">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                  </svg>
+                </a>
+                <a href="https://www.tiktok.com/@kharkiv_liceum157?_t=ZM-90fwaR6tGhP&_r=1" target="_blank" rel="noopener noreferrer" class="social-link tiktok" aria-label="TikTok ліцею">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="reveal">
+            <img class="logo-hero" src="assets/img/log.jpg" alt="Логотип ліцею №157">
+          </div>
+        </div>
+      </section>
+
+      <!-- Останні новини -->
+      <section class="news-preview">
+        <div class="container">
+          <h2 class="section-title accent-underline">Останні новини</h2>
+          <p class="muted">Слідкуйте за життям нашого ліцею</p>
+          <div class="cards">
+            <div class="modern-card reveal">
+              <div class="modern-card-icon">🏆</div>
+              <h3>Перемога на обласній олімпіаді</h3>
+              <p><small class="pill">15 грудня 2024</small></p>
+              <p>Учні 11 класу зайняли перше місце на обласній олімпіаді з математики. Вітаємо переможців!</p>
+              <a href="news.html" class="modern-card-link">Читати всі новини →</a>
+            </div>
+            <div class="modern-card reveal">
+              <div class="modern-card-icon">🔬</div>
+              <h3>Нове обладнання в лабораторіях</h3>
+              <p><small class="pill">12 грудня 2024</small></p>
+              <p>До ліцею надійшло сучасне обладнання для фізичних та хімічних лабораторій.</p>
+              <a href="news.html" class="modern-card-link">Читати всі новини →</a>
+            </div>
+            <div class="modern-card reveal">
+              <div class="modern-card-icon">🎭</div>
+              <h3>Новорічний концерт</h3>
+              <p><small class="pill">20 грудня 2024</small></p>
+              <p>Традиційний новорічний концерт за участю учнів всіх класів. Початок о 18:00 в актовій залі.</p>
+              <a href="news.html" class="modern-card-link">Читати всі новини →</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Про ліцей -->
+      <section class="about-preview">
+        <div class="container">
+          <h2 class="section-title accent-underline">Про наш ліцей</h2>
+          <p class="muted">Освіта майбутнього вже сьогодні</p>
+          <div class="about-content">
+            <div class="about-text reveal">
+              <h3>Ліцей №157 — освіта майбутнього</h3>
+              <p>Ми створюємо освітнє середовище, де кожен учень може розкрити свій потенціал і досягти видатних результатів. Наш ліцей працює з 1991 року та має багаті традиції якісної освіти.</p>
+              <div class="achievements-mini">
+                <div class="achievement-item">
+                  <strong>92%</strong> поступають у ВНЗ
+                </div>
+                <div class="achievement-item">
+                  <strong>23</strong> переможці олімпіад
+                </div>
+                <div class="achievement-item">
+                  <strong>175</strong> середній бал ЗНО
+                </div>
+              </div>
+              <a href="about.html" class="cta">Дізнатися більше про ліцей</a>
+            </div>
+            <div class="about-image reveal">
+              <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=600&auto=format&fit=crop" alt="Сучасні класи ліцею" class="preview-image">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Розклад -->
+      <section class="schedule-preview">
+        <div class="container">
+          <h2 class="section-title accent-underline">Розклад уроків</h2>
+          <p class="muted">Час дзвінків та організація навчального процесу</p>
+          <div class="schedule-content">
+            <div class="schedule-table reveal">
+              <h3>Час дзвінків</h3>
+              <div class="schedule-grid">
+                <div class="schedule-item">
+                  <span class="lesson-num">1 урок</span>
+                  <span class="lesson-time">08:30 - 09:15</span>
+                </div>
+                <div class="schedule-item">
+                  <span class="lesson-num">2 урок</span>
+                  <span class="lesson-time">09:25 - 10:10</span>
+                </div>
+                <div class="schedule-item">
+                  <span class="lesson-num">3 урок</span>
+                  <span class="lesson-time">10:20 - 11:05</span>
+                </div>
+                <div class="schedule-item">
+                  <span class="lesson-num">4 урок</span>
+                  <span class="lesson-time">11:20 - 12:05</span>
+                </div>
+              </div>
+              <a href="schedule.html" class="modern-card-link">Переглянути повний розклад →</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Вчителі -->
+      <section class="teachers-preview">
+        <div class="container">
+          <h2 class="section-title accent-underline">Наші вчителі</h2>
+          <p class="muted">Досвідчені педагоги та наставники</p>
+          <div class="teachers-grid">
+            <div class="teacher-card reveal">
+              <div class="teacher-avatar">👩‍🏫</div>
+              <h3>Іванова Марія Петрівна</h3>
+              <p class="teacher-subject">Математика</p>
+              <p>Вчитель вищої категорії, стаж 15 років</p>
+            </div>
+            <div class="teacher-card reveal">
+              <div class="teacher-avatar">👨‍🔬</div>
+              <h3>Петренко Олександр Іванович</h3>
+              <p class="teacher-subject">Фізика</p>
+              <p>Кандидат фізико-математичних наук</p>
+            </div>
+            <div class="teacher-card reveal">
+              <div class="teacher-avatar">👩‍💻</div>
+              <h3>Сидоренко Олена Миколаївна</h3>
+              <p class="teacher-subject">Інформатика</p>
+              <p>Спеціаліст з програмування, стаж 8 років</p>
+            </div>
+          </div>
+          <div class="text-center">
+            <a href="teachers.html" class="cta">Познайомитися з усіма вчителями</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Вступ -->
+      <section class="admission-preview">
+        <div class="container">
+          <h2 class="section-title accent-underline">Вступ до ліцею</h2>
+          <p class="muted">Приєднуйтесь до нашої освітньої спільноти</p>
+          <div class="admission-content">
+            <div class="admission-info reveal">
+              <div class="admission-steps">
+                <div class="step">
+                  <div class="step-number">1</div>
+                  <div class="step-content">
+                    <h4>Подача документів</h4>
+                    <p>З 1 березня по 31 травня</p>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-number">2</div>
+                  <div class="step-content">
+                    <h4>Вступні іспити</h4>
+                    <p>Математика та українська мова</p>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="step-number">3</div>
+                  <div class="step-content">
+                    <h4>Зарахування</h4>
+                    <p>Оголошення результатів до 15 червня</p>
+                  </div>
+                </div>
+              </div>
+              <a href="admission.html" class="cta">Дізнатися про вступ</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Швидкі посилання -->
+      <section class="quick-links">
+        <div class="container">
+          <h2 class="section-title accent-underline">Швидкі посилання</h2>
+          <p class="muted">Популярні розділи сайту</p>
+          <div class="cards">
+            <div class="modern-card reveal">
+              <div class="modern-card-icon">📅</div>
+              <h3>Розклад</h3>
+              <p>Актуальний розклад уроків та дзвінків для всіх класів</p>
+              <a href="schedule.html" class="modern-card-link">Переглянути →</a>
+            </div>
+            <div class="modern-card reveal">
+              <div class="modern-card-icon">🎓</div>
+              <h3>Вступ</h3>
+              <p>Правила прийому, необхідні документи та терміни подачі</p>
+              <a href="admission.html" class="modern-card-link">Дізнатися детальніше →</a>
+            </div>
+            <div class="modern-card reveal">
+              <div class="modern-card-icon">📞</div>
+              <h3>Контакти</h3>
+              <p>Адреса ліцею, телефони та форма зворотного зв'язку</p>
+              <a href="contacts.html" class="modern-card-link">Зв'язатися →</a>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="stats">
+            <div class="stat reveal">
+              <div class="num">850+</div>
+              <div class="label">Учнів</div>
+            </div>
+            <div class="stat reveal">
+              <div class="num">65</div>
+              <div class="label">Вчителів</div>
+            </div>
+            <div class="stat reveal">
+              <div class="num">32</div>
+              <div class="label">Кабінети</div>
+            </div>
+            <div class="stat reveal">
+              <div class="num">1991</div>
+              <div class="label">Рік заснування</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Контакти адміністрації -->
+      <section class="contacts-preview">
+        <div class="container">
+          <h2 class="section-title accent-underline">Контакти адміністрації</h2>
+          <p class="muted">Основні контактні особи ліцею</p>
+          <div class="contacts-grid">
+            <div class="contact-card reveal">
+              <div class="contact-icon">👨‍💼</div>
+              <h3>Петров Іван Олександрович</h3>
+              <p class="contact-position">Директор ліцею</p>
+              <div class="contact-info">
+                <p>📞 +38 (057) 123-45-67</p>
+                <p>📧 director@lyceum157.kh.ua</p>
+                <p>🕐 Прийом: Пн-Пт 14:00-17:00</p>
+              </div>
+            </div>
+            <div class="contact-card reveal">
+              <div class="contact-icon">👩‍🏫</div>
+              <h3>Сидоренко Марія Петрівна</h3>
+              <p class="contact-position">Заступник директора з навчальної роботи</p>
+              <div class="contact-info">
+                <p>📞 +38 (057) 123-45-70</p>
+                <p>📧 education@lyceum157.kh.ua</p>
+                <p>🕐 Прийом: Пн-Пт 9:00-16:00</p>
+              </div>
+            </div>
+            <div class="contact-card reveal">
+              <div class="contact-icon">👨‍🎓</div>
+              <h3>Коваленко Олексій Миколайович</h3>
+              <p class="contact-position">Заступник директора з виховної роботи</p>
+              <div class="contact-info">
+                <p>📞 +38 (057) 123-45-71</p>
+                <p>📧 education@lyceum157.kh.ua</p>
+                <p>🕐 Прийом: Вт, Чт 10:00-15:00</p>
+              </div>
+            </div>
+            <div class="contact-card reveal">
+              <div class="contact-icon">👩‍💻</div>
+              <h3>Іваненко Олена Вікторівна</h3>
+              <p class="contact-position">Секретар</p>
+              <div class="contact-info">
+                <p>📞 +38 (057) 123-45-68</p>
+                <p>📧 info@lyceum157.kh.ua</p>
+                <p>🕐 Прийом: Пн-Пт 8:00-17:00</p>
+              </div>
+            </div>
+          </div>
+          <div class="contact-footer">
+            <p><strong>Адреса:</strong> вул. 92-ї Бригади, 30, Харків, Харківська область, 61172</p>
+            <a href="contacts.html" class="cta">Детальна контактна інформація</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Карта розташування -->
+      <section class="map-section">
+        <div class="container">
+          <h2 class="section-title accent-underline">Як нас знайти</h2>
+          <p class="muted">Ліцей №157 розташований у зручному районі Харкова</p>
+          
+          <div class="map-container">
+            <div class="map-info">
+              <div class="map-address">
+                <h3>📍 Наша адреса</h3>
+                <p><strong>вул. 92-ї Бригади, 30</strong><br>
+                Харків, Харківська область, 61172, Україна</p>
+                
+                <div class="transport-info">
+                  <h4>🚇 Як добратися:</h4>
+                  <ul>
+                    <li><strong>Метро:</strong> ст. "Наукова" (10 хв пішки)</li>
+                    <li><strong>Автобус:</strong> №15а, 23, 45, 67к</li>
+                    <li><strong>Зупинка:</strong> "92-ї Бригади"</li>
+                  </ul>
+                </div>
+                
+                <a href="https://maps.google.com/maps?q=вул.+92-ї+Бригади,+30,+Харків,+Харківська+область,+61172" 
+                   target="_blank" 
+                   rel="noopener noreferrer" 
+                   class="btn map-btn">
+                  🗺️ Відкрити в Google Maps
+                </a>
+              </div>
+            </div>
+            
+            <div class="map-embed">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2564.2!2d36.2304!3d49.9123!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4127a0f5b5b5b5b5%3A0x5b5b5b5b5b5b5b5b!2z0LLRg9C7LiA5Mi3RlyDQkdGA0LjQs9Cw0LTQuCwgMzAsINCl0LDRgNC60ZbQsiwg0KXQsNGA0LrRltCy0YHRjNC60LAg0L7QsdC70LDRgdGC0YwsIDYxMTcy!5e0!3m2!1suk!2sua!4v1234567890!5m2!1suk!2sua"
+                width="100%" 
+                height="400" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Карта розташування Ліцею №157">
+              </iframe>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div>© <span id="year"></span> Ліцей №157 м. Харків. Всі права захищені.</div>
+      </div>
+    </footer>
+
+    <script src="assets/js/page-transitions.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/auth.js"></script>
     <script>
-        // Initialize Telegram Web App
-        const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand();
-
-        // Quiz data
-        const QUESTIONS = [
-            {
-                question: 'Хто вважається засновником компанії Microsoft?',
-                options: ['Білл Гейтс', 'Стів Джобс', 'Марк Цукерберг', 'Ілон Маск'],
-                correct: 0
-            },
-            {
-                question: 'Яка мова програмування найпопулярніша у 2024 році?',
-                options: ['Python', 'JavaScript', 'Java', 'C++'],
-                correct: 0
-            },
-            {
-                question: 'Що з перелічених є операційною системою?',
-                options: ['Windows', 'MS Word', 'Google Chrome', 'Photoshop'],
-                correct: 0
-            },
-            {
-                question: 'Як називається перша комп\'ютерна програма у світі?',
-                options: ['Алгоритм для аналітичної машини', 'Windows 1.0', 'UNIX', 'MS-DOS'],
-                correct: 0
-            },
-            {
-                question: 'Якій компанії належить операційна система Android?',
-                options: ['Google', 'Apple', 'Microsoft', 'Samsung'],
-                correct: 0
-            },
-            {
-                question: 'Хто винайшов Всесвітню павутину (WWW)?',
-                options: ['Тім Бернерс-Лі', 'Вінт Серф', 'Боб Метцельф', 'Джон Посtel'],
-                correct: 0
-            },
-            {
-                question: 'Яка компанія розробила мову програмування Java?',
-                options: ['Sun Microsystems', 'Oracle', 'IBM', 'Microsoft'],
-                correct: 0
-            },
-            {
-                question: 'Скільки бітів у одному байті?',
-                options: ['8', '16', '32', '4'],
-                correct: 0
-            },
-            {
-                question: 'Який процесор найпопулярніший для персональних комп\'ютерів?',
-                options: ['Intel Core', 'AMD Ryzen', 'ARM', 'Qualcomm'],
-                correct: 0
-            },
-            {
-                question: 'Коли був винайдений перший комп\'ютер?',
-                options: ['1946', '1956', '1966', '1976'],
-                correct: 0
-            }
-        ];
-
-        let currentQuestion = 0;
-        let score = 0;
-        let answers = [];
-        let selectedAnswer = null;
-
-        function startQuiz() {
-            // Get user ID from Telegram
-            const user = tg.initDataUnsafe?.user;
-            const userId = user?.id;
-            const username = user?.username || user?.first_name || 'Anonymous';
-            
-            // Show class input form
-            const classInput = prompt('Введи свій клас (наприклад: 9-А, 10-Б):');
-            if (!classInput) {
-                alert('Будь ласка, введи клас!');
-                return;
-            }
-            
-            // Send user info to server
-            fetch('http://localhost:5000/api/user-started', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    user_id: userId,
-                    username: username,
-                    class: classInput
-                })
-            })
-            .catch(error => console.error('Помилка при відправці:', error));
-            
-            currentQuestion = 0;
-            score = 0;
-            answers = [];
-            selectedAnswer = null;
-            
-            // Store user info
-            window.userClass = classInput;
-            window.userId = userId;
-            window.username = username;
-            
-            showQuizScreen();
-            displayQuestion();
-        }
-
-        function showStartScreen() {
-            document.getElementById('startScreen').style.display = 'block';
-            document.getElementById('quizScreen').style.display = 'none';
-            document.getElementById('resultsScreen').style.display = 'none';
-        }
-
-        function showQuizScreen() {
-            document.getElementById('startScreen').style.display = 'none';
-            document.getElementById('quizScreen').style.display = 'block';
-            document.getElementById('resultsScreen').style.display = 'none';
-        }
-
-        function showResultsScreen() {
-            document.getElementById('startScreen').style.display = 'none';
-            document.getElementById('quizScreen').style.display = 'none';
-            document.getElementById('resultsScreen').style.display = 'block';
-        }
-
-        function displayQuestion() {
-            const question = QUESTIONS[currentQuestion];
-            const progress = ((currentQuestion + 1) / QUESTIONS.length) * 100;
-
-            const progressFill = document.getElementById('progressFill');
-            progressFill.classList.remove('animate');
-            
-            // Trigger animation
-            setTimeout(() => {
-                progressFill.style.width = progress + '%';
-                progressFill.classList.add('animate');
-            }, 10);
-            document.getElementById('questionNumber').textContent = `Запитання ${currentQuestion + 1} з ${QUESTIONS.length}`;
-            document.getElementById('question').textContent = question.question;
-
-            const optionsContainer = document.getElementById('options');
-            optionsContainer.innerHTML = '';
-
-            // Create array of (option, original_index) tuples
-            const optionsWithIndices = question.options.map((option, index) => ({
-                text: option,
-                originalIndex: index
-            }));
-
-            // Shuffle the options
-            for (let i = optionsWithIndices.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [optionsWithIndices[i], optionsWithIndices[j]] = [optionsWithIndices[j], optionsWithIndices[i]];
-            }
-
-            // Store shuffled options for this question
-            QUESTIONS[currentQuestion].shuffledOptions = optionsWithIndices;
-
-            optionsWithIndices.forEach((item) => {
-                const button = document.createElement('button');
-                button.className = 'option';
-                button.textContent = item.text;
-                button.onclick = () => selectAnswer(item.originalIndex);
-                optionsContainer.appendChild(button);
-            });
-
-            selectedAnswer = null;
-            document.getElementById('nextBtn').disabled = true;
-            document.getElementById('feedback').classList.remove('show', 'correct', 'incorrect');
-        }
-
-        function selectAnswer(index) {
-            const question = QUESTIONS[currentQuestion];
-            const isCorrect = index === question.correct;
-            const options = document.querySelectorAll('.option');
-            const shuffledOptions = question.shuffledOptions;
-
-            // Disable all options
-            options.forEach(opt => opt.disabled = true);
-
-            // Find the position of clicked answer in shuffled array
-            let clickedPosition = -1;
-            let correctPosition = -1;
-            
-            for (let i = 0; i < shuffledOptions.length; i++) {
-                if (shuffledOptions[i].originalIndex === index) {
-                    clickedPosition = i;
-                }
-                if (shuffledOptions[i].originalIndex === question.correct) {
-                    correctPosition = i;
-                }
-            }
-
-            // Show selected answer
-            if (clickedPosition !== -1) {
-                options[clickedPosition].classList.add('selected');
-            }
-
-            // Show correct/incorrect feedback
-            if (isCorrect) {
-                if (clickedPosition !== -1) {
-                    options[clickedPosition].classList.remove('selected');
-                    options[clickedPosition].classList.add('correct');
-                }
-                score++;
-                showFeedback('✅ Правильно!', 'correct');
-            } else {
-                if (clickedPosition !== -1) {
-                    options[clickedPosition].classList.remove('selected');
-                    options[clickedPosition].classList.add('incorrect');
-                }
-                if (correctPosition !== -1) {
-                    options[correctPosition].classList.add('correct');
-                }
-                showFeedback(`❌ Неправильно! Правильна відповідь: ${question.options[question.correct]}`, 'incorrect');
-            }
-
-            answers.push({
-                question: question.question,
-                selected: index,
-                correct: question.correct,
-                isCorrect: isCorrect
-            });
-
-            selectedAnswer = index;
-            document.getElementById('nextBtn').disabled = false;
-        }
-
-        function showFeedback(message, type) {
-            const feedback = document.getElementById('feedback');
-            feedback.textContent = message;
-            feedback.classList.add('show', type);
-        }
-
-        function nextQuestion() {
-            currentQuestion++;
-            if (currentQuestion < QUESTIONS.length) {
-                displayQuestion();
-            } else {
-                showResults();
-            }
-        }
-
-        function showResults() {
-            showResultsScreen();
-            const percentage = (score / QUESTIONS.length) * 100;
-
-            let emoji, message, description;
-            if (percentage >= 80) {
-                emoji = '🎉';
-                message = 'Чудовий результат!';
-                description = 'Ти справжній комп\'ютерний геній!';
-            } else if (percentage >= 50) {
-                emoji = '👍';
-                message = 'Хороший результат!';
-                description = 'Але є куди прагнути!';
-            } else {
-                emoji = '🤔';
-                message = 'Непогано!';
-                description = 'Тобі варто підтягнути знання в галузі інформатики!';
-            }
-
-            document.getElementById('scoreCircle').textContent = `${score}/${QUESTIONS.length}`;
-            document.getElementById('resultsMessage').textContent = message;
-            document.getElementById('resultsDescription').textContent = description;
-
-            // Show detailed results
-            const detailedResults = document.getElementById('detailedResults');
-            detailedResults.innerHTML = '';
-            answers.forEach((answer, index) => {
-                const item = document.createElement('div');
-                item.className = 'result-item';
-                item.innerHTML = `
-                    <div class="result-item-question">${index + 1}. ${answer.question}</div>
-                    <div class="result-item-answer ${answer.isCorrect ? 'correct' : 'incorrect'}">
-                        ${answer.isCorrect ? '✅' : '❌'} ${QUESTIONS[index].options[answer.selected]}
-                    </div>
-                    ${!answer.isCorrect ? `<div class="result-item-answer">Правильна відповідь: ${QUESTIONS[index].options[answer.correct]}</div>` : ''}
-                `;
-                detailedResults.appendChild(item);
-            });
-
-            // Save result to server
-            saveResultToServer();
-        }
-
-        function saveResultToServer() {
-            const resultData = {
-                user_id: window.userId || 0,
-                username: window.username || 'Anonymous',
-                class: window.userClass || 'Unknown',
-                score: score,
-                total_questions: QUESTIONS.length
-            };
-
-            // Log result to console
-            console.log('=== РЕЗУЛЬТАТ ВІКТОРИНИ ===');
-            console.log('User ID:', resultData.user_id);
-            console.log('Username:', resultData.username);
-            console.log('Клас:', resultData.class);
-            console.log('Результат:', `${resultData.score}/${resultData.total_questions}`);
-            console.log('Час завершення:', new Date().toLocaleString('uk-UA'));
-            console.log('============================');
-
-            fetch('http://localhost:5000/api/save-result', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(resultData)
-            })
-            .then(response => response.json())
-            .then(data => console.log('Результат збережено на сервері:', data))
-            .catch(error => console.error('Помилка при збереженні:', error));
-        }
-
-        function shareResults() {
-            const percentage = (score / QUESTIONS.length) * 100;
-            const message = `🎮 Я набрав ${score} з ${QUESTIONS.length} (${Math.round(percentage)}%) у вікторині до Дня комп'ютера! Спробуй і ти! 💻`;
-            
-            if (tg.sendData) {
-                tg.sendData(message);
-            } else {
-                alert(message);
-            }
-        }
-
-        // Show start screen on load
-        showStartScreen();
+      document.getElementById('year').textContent = new Date().getFullYear();
     </script>
-</body>
-</html>
+  </body>
+  </html>
