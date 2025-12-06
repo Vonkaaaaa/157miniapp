@@ -286,6 +286,28 @@
             position: relative;
             border: 1px solid rgba(255, 255, 255, 0.5);
             backdrop-filter: blur(10px);
+            max-height: 90vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background: #d32f2f;
+            border-radius: 10px;
+        }
+
+        .container::-webkit-scrollbar-thumb:hover {
+            background: #a0522d;
         }
 
         @keyframes slideIn {
