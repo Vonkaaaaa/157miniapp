@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -17,7 +18,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #a0522d 0%, #8b4513 50%, #704214 100%);
+            background: linear-gradient(135deg, #d32f2f 0%, #c62828 25%, #8b0000 50%, #a0522d 75%, #8b4513 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -266,65 +267,6 @@
             background: linear-gradient(45deg, rgba(255, 193, 7, 0.3) 0%, transparent 50%);
             animation: float 17s ease-in-out infinite;
         }
-
-        .shape-11 {
-            width: 85px;
-            height: 85px;
-            top: 10%;
-            left: 3%;
-            border: 3px solid rgba(255, 152, 0, 0.5);
-            border-radius: 15px;
-            animation: rotateSlow 20s linear infinite;
-        }
-
-        .shape-12 {
-            width: 70px;
-            height: 70px;
-            top: 45%;
-            left: 8%;
-            background: linear-gradient(135deg, rgba(244, 67, 54, 0.4) 0%, transparent 50%);
-            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-            animation: float 15s ease-in-out infinite;
-        }
-
-        .shape-13 {
-            width: 60px;
-            height: 60px;
-            bottom: 15%;
-            left: 12%;
-            border: 2px dashed rgba(255, 193, 7, 0.5);
-            border-radius: 50%;
-            animation: rotateSlow 18s linear infinite reverse;
-        }
-
-        .shape-14 {
-            width: 55px;
-            height: 55px;
-            top: 55%;
-            left: 2%;
-            background: linear-gradient(45deg, rgba(255, 152, 0, 0.4) 0%, transparent 50%);
-            animation: float 14s ease-in-out infinite reverse;
-        }
-
-        .shape-15 {
-            width: 80px;
-            height: 80px;
-            top: 75%;
-            left: 15%;
-            border: 2px solid rgba(244, 67, 54, 0.4);
-            border-radius: 20px;
-            animation: rotateSlow 25s linear infinite;
-        }
-
-        .shape-16 {
-            width: 65px;
-            height: 65px;
-            top: 25%;
-            left: 18%;
-            background: linear-gradient(135deg, rgba(255, 193, 7, 0.35) 0%, transparent 50%);
-            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
-            animation: float 16s ease-in-out infinite;
-        }
     </style>
     <style>
 
@@ -344,10 +286,6 @@
             position: relative;
             border: 1px solid rgba(255, 255, 255, 0.5);
             backdrop-filter: blur(10px);
-            max-height: 90vh;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
         }
 
         @keyframes slideIn {
@@ -480,7 +418,6 @@
             font-weight: 700;
             position: relative;
             z-index: 1;
-            animation: float 3s ease-in-out infinite;
             font-family: 'Poppins', sans-serif;
             letter-spacing: -0.5px;
         }
@@ -521,39 +458,6 @@
         .quiz-screen {
             display: none;
             animation: fadeIn 0.6s ease-out;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .quiz-content {
-            flex: 1;
-            overflow-y: auto;
-            padding-right: 8px;
-        }
-
-        .quiz-content::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .quiz-content::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-
-        .quiz-content::-webkit-scrollbar-thumb {
-            background: #d32f2f;
-            border-radius: 10px;
-        }
-
-        .quiz-content::-webkit-scrollbar-thumb:hover {
-            background: #a0522d;
-        }
-
-        .quiz-buttons {
-            margin-top: auto;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
         }
 
         .progress-bar {
@@ -936,158 +840,40 @@
             border-left: 4px solid #ef4444;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 480px) {
             .container {
+                padding: 25px;
+                border-radius: 20px;
+            }
+
+            .header {
                 padding: 20px;
-                border-radius: 16px;
-                max-width: 100%;
-            }
-
-            .header {
-                padding: 18px;
-                margin-bottom: 20px;
-                border-radius: 12px;
+                margin-bottom: 25px;
             }
 
             .header h1 {
-                font-size: 24px;
-                margin-bottom: 5px;
-            }
-
-            .header p {
-                font-size: 12px;
-            }
-
-            .progress-bar {
-                height: 6px;
-                margin-bottom: 20px;
-            }
-
-            .question-number {
-                font-size: 12px;
-                margin-bottom: 12px;
+                font-size: 26px;
             }
 
             .question {
-                font-size: 16px;
-                margin-bottom: 18px;
-                line-height: 1.5;
-            }
-
-            .options {
-                gap: 10px;
-                margin-bottom: 15px;
+                font-size: 18px;
+                margin-bottom: 22px;
             }
 
             .option {
-                padding: 12px 14px;
-                font-size: 14px;
-                border-radius: 10px;
-            }
-
-            .feedback {
-                padding: 10px 12px;
-                font-size: 13px;
-                margin-top: 12px;
-            }
-
-            .score-circle {
-                width: 100px;
-                height: 100px;
-                font-size: 40px;
-                margin: 0 auto 20px;
-            }
-
-            .results-message {
-                font-size: 22px;
-                margin-bottom: 8px;
-            }
-
-            .results-description {
-                font-size: 14px;
-                margin-bottom: 20px;
-            }
-
-            .detailed-results {
-                padding: 16px;
-                margin-bottom: 20px;
-                max-height: 250px;
-            }
-
-            .result-item {
-                padding: 10px 0;
-                font-size: 13px;
-            }
-
-            .result-item-question {
-                font-size: 13px;
-                margin-bottom: 4px;
-            }
-
-            button {
-                padding: 12px;
-                font-size: 13px;
-                border-radius: 10px;
-            }
-
-            .buttons {
-                gap: 10px;
-                margin-top: 15px;
-            }
-
-            .start-screen .emoji {
-                font-size: 70px;
-                margin-bottom: 20px;
-            }
-
-            .start-screen p {
-                font-size: 14px;
-                margin-bottom: 15px;
-            }
-
-            /* Скрыть декоративные элементы на очень маленьких экранах */
-            .circle-1, .circle-2, .circle-3 {
-                opacity: 0.3;
-            }
-
-            .geometric-shape {
-                opacity: 0.2;
-            }
-        }
-
-        @media (max-width: 360px) {
-            .container {
-                padding: 15px;
-            }
-
-            .header {
-                padding: 15px;
-                margin-bottom: 15px;
-            }
-
-            .header h1 {
-                font-size: 20px;
-            }
-
-            .question {
+                padding: 14px 16px;
                 font-size: 15px;
-                margin-bottom: 15px;
-            }
-
-            .option {
-                padding: 10px 12px;
-                font-size: 13px;
-            }
-
-            button {
-                padding: 10px;
-                font-size: 12px;
             }
 
             .score-circle {
-                width: 80px;
-                height: 80px;
-                font-size: 32px;
+                width: 120px;
+                height: 120px;
+                font-size: 48px;
+            }
+
+            button {
+                padding: 14px;
+                font-size: 14px;
             }
         }
     </style>
@@ -1109,12 +895,6 @@
     <div class="geometric-shape shape-8"></div>
     <div class="geometric-shape shape-9"></div>
     <div class="geometric-shape shape-10"></div>
-    <div class="geometric-shape shape-11"></div>
-    <div class="geometric-shape shape-12"></div>
-    <div class="geometric-shape shape-13"></div>
-    <div class="geometric-shape shape-14"></div>
-    <div class="geometric-shape shape-15"></div>
-    <div class="geometric-shape shape-16"></div>
 
     <div class="container">
         <div class="header">
@@ -1135,16 +915,14 @@
 
         <!-- Quiz Screen -->
         <div class="quiz-screen" id="quizScreen">
-            <div class="quiz-content">
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-                <div class="question-number" id="questionNumber"></div>
-                <div class="question" id="question"></div>
-                <div class="options" id="options"></div>
-                <div class="feedback" id="feedback"></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
             </div>
-            <div class="quiz-buttons">
+            <div class="question-number" id="questionNumber"></div>
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+            <div class="feedback" id="feedback"></div>
+            <div class="buttons">
                 <button class="btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>Наступне запитання</button>
             </div>
         </div>
