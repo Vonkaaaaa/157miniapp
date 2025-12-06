@@ -899,40 +899,158 @@
             border-left: 4px solid #ef4444;
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 600px) {
             .container {
-                padding: 25px;
-                border-radius: 20px;
+                padding: 20px;
+                border-radius: 16px;
+                max-width: 100%;
             }
 
             .header {
-                padding: 20px;
-                margin-bottom: 25px;
+                padding: 18px;
+                margin-bottom: 20px;
+                border-radius: 12px;
             }
 
             .header h1 {
-                font-size: 26px;
+                font-size: 24px;
+                margin-bottom: 5px;
+            }
+
+            .header p {
+                font-size: 12px;
+            }
+
+            .progress-bar {
+                height: 6px;
+                margin-bottom: 20px;
+            }
+
+            .question-number {
+                font-size: 12px;
+                margin-bottom: 12px;
             }
 
             .question {
-                font-size: 18px;
-                margin-bottom: 22px;
+                font-size: 16px;
+                margin-bottom: 18px;
+                line-height: 1.5;
+            }
+
+            .options {
+                gap: 10px;
+                margin-bottom: 15px;
             }
 
             .option {
-                padding: 14px 16px;
-                font-size: 15px;
+                padding: 12px 14px;
+                font-size: 14px;
+                border-radius: 10px;
+            }
+
+            .feedback {
+                padding: 10px 12px;
+                font-size: 13px;
+                margin-top: 12px;
             }
 
             .score-circle {
-                width: 120px;
-                height: 120px;
-                font-size: 48px;
+                width: 100px;
+                height: 100px;
+                font-size: 40px;
+                margin: 0 auto 20px;
+            }
+
+            .results-message {
+                font-size: 22px;
+                margin-bottom: 8px;
+            }
+
+            .results-description {
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
+
+            .detailed-results {
+                padding: 16px;
+                margin-bottom: 20px;
+                max-height: 250px;
+            }
+
+            .result-item {
+                padding: 10px 0;
+                font-size: 13px;
+            }
+
+            .result-item-question {
+                font-size: 13px;
+                margin-bottom: 4px;
             }
 
             button {
-                padding: 14px;
+                padding: 12px;
+                font-size: 13px;
+                border-radius: 10px;
+            }
+
+            .buttons {
+                gap: 10px;
+                margin-top: 15px;
+            }
+
+            .start-screen .emoji {
+                font-size: 70px;
+                margin-bottom: 20px;
+            }
+
+            .start-screen p {
                 font-size: 14px;
+                margin-bottom: 15px;
+            }
+
+            /* Скрыть декоративные элементы на очень маленьких экранах */
+            .circle-1, .circle-2, .circle-3 {
+                opacity: 0.3;
+            }
+
+            .geometric-shape {
+                opacity: 0.2;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .question {
+                font-size: 15px;
+                margin-bottom: 15px;
+            }
+
+            .option {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 12px;
+            }
+
+            .score-circle {
+                width: 80px;
+                height: 80px;
+                font-size: 32px;
             }
         }
     </style>
